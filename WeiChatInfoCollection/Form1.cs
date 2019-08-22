@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Renci.SshNet;
 
 namespace WeiChatInfoCollection
 {
@@ -43,7 +48,7 @@ namespace WeiChatInfoCollection
 
 
 
-        public enum MeaageType
+        public   enum MessageType
         {
             Begin,
             Success,
@@ -52,7 +57,7 @@ namespace WeiChatInfoCollection
 
 
 
-        private void ShowMessageInternal(MeaageType status, string message)
+       public  void ShowMessageInternal(MessageType status, string message)
         {
 
             if (message == null)
@@ -61,17 +66,17 @@ namespace WeiChatInfoCollection
             {
                 switch (status)
                 {
-                    case MeaageType.Begin:
+                    case MessageType.Begin:
                         this.richMessage.SelectionColor = Color.Blue;
                         this.richMessage.AppendText(DateTime.Now.ToString("HH:mm:ss") + " " + message + "\n");
                         this.richMessage.Update();
                         break;
-                    case MeaageType.Success:
+                    case MessageType.Success:
                         this.richMessage.SelectionColor = Color.Green;
                         this.richMessage.AppendText(DateTime.Now.ToString("HH:mm:ss") + " " + message + "\n");
                         this.richMessage.Update();
                         break;
-                    case MeaageType.Failure:
+                    case MessageType.Failure:
                         this.richMessage.SelectionColor = Color.Red;
                         this.richMessage.AppendText(DateTime.Now.ToString("HH:mm:ss") + " " + message + "\n");
                         this.richMessage.Update();
@@ -96,7 +101,19 @@ namespace WeiChatInfoCollection
             if (!CheckValue())
                 return;
 
-            
+
+
+            ShowMessageInternal(MessageType.Begin, "Start loading info from web link...");
+            string result = HttpGet(WebLink);
+
+           // List<MyStok> myDeserializedObjList = (List<MyStok>)Newtonsoft.Json.JsonConvert.DeserializeObject(sc), typeof(List<MyStok>));
+
+
+            List<WebInfo >  myWebInfoList = (List<WebInfo>) Newtonsoft.Json.JsonConvert.DeserializeObject(result,typeof(List<WebInfo>));
+            WebInfo wi  = JsonConvert.DeserializeObject<WebInfo>(result);
+
+            MessageBox.Show("OK");
+
 
         }
 
@@ -109,7 +126,7 @@ namespace WeiChatInfoCollection
 
             if (string.IsNullOrEmpty(StartTime))
             {
-                ShowMessageInternal(MeaageType.Failure, "Start time is null,pls retry...");
+                ShowMessageInternal(MessageType.Failure, "Start time is null,pls retry...");
                 dtpStart.Focus();
                 return false;
             }
@@ -119,7 +136,7 @@ namespace WeiChatInfoCollection
             EndTime = txtEnd.Text.Trim();
             if (string.IsNullOrEmpty(EndTime))
             {
-                ShowMessageInternal(MeaageType.Failure, "End time is null,pls retry...");
+                ShowMessageInternal(MessageType.Failure, "End time is null,pls retry...");
                 dtpEnd.Focus();
                 return false;
             }
@@ -130,7 +147,7 @@ namespace WeiChatInfoCollection
             Plant = comboPlant.Text.Trim();
             if (string.IsNullOrEmpty(Plant ))
             {
-                ShowMessageInternal(MeaageType.Failure, "Plant is null,pls retry...");
+                ShowMessageInternal(MessageType.Failure, "Plant is null,pls retry...");
                 comboPlant.Focus();
                 return false;
             }
@@ -212,14 +229,14 @@ namespace WeiChatInfoCollection
         {
             txtStart.Text = Local2Utc(dtpStart.Value);
             StartTime = txtStart.Text.Trim();
-            ShowMessageInternal(MeaageType.Begin, "Start Local Time:" + dtpStart.Value.ToString("yyyy-MM-dd HH:mm:ss") + ", UTC Time:" + StartTime);
+            ShowMessageInternal(MessageType.Begin, "Start Local Time:" + dtpStart.Value.ToString("yyyy-MM-dd HH:mm:ss") + ", UTC Time:" + StartTime);
         }
 
         private void dtpEnd_ValueChanged(object sender, EventArgs e)
         {
             txtEnd.Text = Local2Utc(dtpEnd.Value);
             EndTime = txtEnd.Text.Trim();
-            ShowMessageInternal(MeaageType.Begin, "End Local Time:" + dtpEnd.Value.ToString("yyyy-MM-dd HH:mm:ss") + ", UTC Time:" + EndTime);
+            ShowMessageInternal(MessageType.Begin, "End Local Time:" + dtpEnd.Value.ToString("yyyy-MM-dd HH:mm:ss") + ", UTC Time:" + EndTime);
         }
 
         private void comboPlant_SelectedIndexChanged(object sender, EventArgs e)
@@ -227,6 +244,98 @@ namespace WeiChatInfoCollection
             Plant = comboPlant.Text;
         }
 
+        #region JsonInfo
 
+
+        public class WebInfo
+        {
+            //
+            public string System { set; get; }
+            public string plant { set; get; }
+            public string eventId { set; get; }
+            public int eventType { set; get; }
+            public int alertType { set; get; }
+            public int ActionOK { set; get; }
+            public int alertItem { set; get; }
+            public int IssueType { set; get; }
+            public string syncId { set; get; }
+            public UInt64 STime { set; get; }
+            public UInt64 ETime { set; get; }
+            public UInt64 PTime { set; get; }
+            public UInt64 EndingTime { set; get; }
+            public UInt64 L1Time { set; get; }
+            public UInt64 L2Time { set; get; }
+            public UInt64 L3Time { set; get; }
+            public string uId { set; get; }
+            public int status { set; get; }
+            public string level { set; get; }
+            public string shortMessage { set; get; }
+            public string eventTime { set; get; }
+            public string evtvalue1 { set; get; }
+            public string evtvalue2 { set; get; }
+            public string evtvalue3 { set; get; }
+            public string evtvalue4 { set; get; }
+            public string evtvalue5 { set; get; }
+            public string evtvalue6 { set; get; }
+            public string evtvalue7 { set; get; }
+            public string evtvalue8 { set; get; }
+            public string evtvalue9 { set; get; }
+            public string evtvalue10 { set; get; }
+            public string evtvalue11 { set; get; }
+            public string evtvalue12 { set; get; }
+            public string evtvalue13 { set; get; }
+            public string evtvalue14 { set; get; }
+            public string evtvalue15 { set; get; }
+            public string pic { set; get; }
+            public string mPic { set; get; }
+            public string mPicPhone { set; get; }
+            public string userId { set; get; }
+            public string actionId { set; get; }
+            public string actionName { set; get; }
+            public string comment { set; get; }
+            public string extenDate { set; get; }
+            public string replyUserId { set; get; }
+            public string replyUserName { set; get; }
+            public string replyDate { set; get; }
+            public int toDMC { set; get; }
+            public int toNitify { set; get; }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+
+        public static string HttpGet(string url)
+        {
+            StreamReader reader = null;
+            try
+            {
+                //ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
+                Encoding encoding = Encoding.UTF8;
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.Accept = "text/html, application/xhtml+xml, */*";
+                request.ContentType = "application/json";
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                using (reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+            catch (Exception ex)
+            {
+                
+               
+                return reader.ReadToEnd();
+            }
+
+        }
+        
+
+        #endregion
     }
 }
