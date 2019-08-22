@@ -1,0 +1,8 @@
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\WeiChatInfoCollection.exe
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\WeiChatInfoCollection.pdb
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.csprojResolveAssemblyReference.cache
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.frmMain.resources
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.Properties.Resources.resources
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.csproj.GenerateResource.Cache
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.exe
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.pdb
