@@ -11,6 +11,11 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Renci.SshNet;
+using System.Threading;
+using NPOI.XSSF.UserModel;
+using NPOI.XSSF;
+using NPOI.SS;
+using NPOI.SS.UserModel;
 
 namespace WeiChatInfoCollection
 {
@@ -28,6 +33,11 @@ namespace WeiChatInfoCollection
         static string EndTime = "1556553600000";
         static string Plant = "F721";
         static string WebLink = @"http://webap01.wks.wistron.com.cn:3010/api/DmcEvents?filter[where][STime][between][0]=" + @StartTime + @"&filter[where][STime][between][1]=" + @EndTime + @"&filter[where][toDMC]=1&filter[where][plant]=" + @Plant;
+
+        Dictionary<string, string> ErrCode = new Dictionary<string, string>();
+
+        //Thread 
+
 
         #endregion
 
@@ -103,16 +113,93 @@ namespace WeiChatInfoCollection
 
 
 
+
             ShowMessageInternal(MessageType.Begin, "Start loading info from web link...");
-            string result = HttpGet(WebLink);
+            //string result = HttpGet(WebLink);
 
            // List<MyStok> myDeserializedObjList = (List<MyStok>)Newtonsoft.Json.JsonConvert.DeserializeObject(sc), typeof(List<MyStok>));
 
 
-            List<WebInfo >  myWebInfoList = (List<WebInfo>) Newtonsoft.Json.JsonConvert.DeserializeObject(result,typeof(List<WebInfo>));
-            WebInfo wi  = JsonConvert.DeserializeObject<WebInfo>(result);
+            StreamReader sr = new StreamReader("json.txt");
+            string result = sr.ReadToEnd();
+            sr.Close();
 
-            MessageBox.Show("OK");
+            JsonSerializerSettings jsetting = new JsonSerializerSettings();
+            jsetting.NullValueHandling = NullValueHandling.Ignore;
+            jsetting.Formatting = Formatting.None;
+            jsetting.MissingMemberHandling = MissingMemberHandling.Ignore;
+            List<WebInfo >  myWebInfoList = (List<WebInfo>) Newtonsoft.Json.JsonConvert.DeserializeObject(result,typeof(List<WebInfo>),jsetting);
+            ShowMessageInternal(MessageType.Success , "Load Json data sucessful,total " + myWebInfoList.Count +" record(s)");
+            //
+
+            //
+
+            string file = "ErrCode.dll";
+            GetErrCode(file);
+
+            ShowMessageInternal(MessageType.Success, "Total eventId:" + ErrCode.Keys.Count);
+
+
+
+
+            ShowMessageInternal(MessageType.Begin, "Start to create excel...");
+            //FileStream fs = File.Create("test.xlsx");
+            //IWorkbook   workbook = new XSSFWorkbook();
+  
+            //ISheet sheet = workbook.CreateSheet("Summary");
+            //IRow row = sheet.CreateRow(0);
+            //ICell cell = row.CreateCell(0);
+            //workbook.Close();
+            //fs.Close();
+
+            FileStream fs = new FileStream("book1.xlsx", FileMode.Create);
+            IWorkbook wb = new XSSFWorkbook();
+            wb.Write(fs);
+            ISheet sheet = wb.CreateSheet("Summary");
+
+            try
+            {
+                //设定要使用的Sheet为第0个Sheet
+                ISheet TempSheet = wb.GetSheetAt(0);
+                int StartRow = 4;
+                //tDS为Query回来的资料
+                for (int i = 0; i < 12; i++)
+                {
+                    //第一个Row要用Create的
+                    TempSheet.CreateRow(StartRow + i).CreateCell(0).SetCellValue(1);
+                    //第二个Row之后直接用Get的
+                    TempSheet.GetRow(StartRow + i).CreateCell(1).SetCellValue(2);
+                    TempSheet.GetRow(StartRow + i).CreateCell(2).SetCellValue(3);
+                    TempSheet.GetRow(StartRow + i).CreateCell(3).SetCellValue(4);
+                    TempSheet.GetRow(StartRow + i).CreateCell(4).SetCellValue(5);
+                    TempSheet.GetRow(StartRow + i).CreateCell(5).SetCellValue(5);
+                    TempSheet.GetRow(StartRow + i).CreateCell(6).SetCellValue(7);
+                    TempSheet.GetRow(StartRow + i).CreateCell(7).SetCellValue(8);
+                    TempSheet.GetRow(StartRow + i).CreateCell(8).SetCellValue(9);
+                    TempSheet.GetRow(StartRow + i).CreateCell(9).SetCellValue(10);
+                    TempSheet.GetRow(StartRow + i).CreateCell(10).SetCellValue(11);
+                    TempSheet.GetRow(StartRow + i).CreateCell(11).SetCellValue(12);
+                    TempSheet.GetRow(StartRow + i).CreateCell(12).SetCellValue(13);
+                }
+                wb.Write(fs);
+                fs.Close();
+                fs.Dispose();
+
+                    
+   
+            }
+            catch (Exception e2)
+            {
+                string a = e2.ToString();
+            }
+
+                
+
+
+
+
+            ShowMessageInternal(MessageType.Success, "Create test.xlsx file sucessful...");
+
 
 
         }
@@ -244,6 +331,34 @@ namespace WeiChatInfoCollection
             Plant = comboPlant.Text;
         }
 
+
+
+        private void GetErrCode(string errcodefile)
+        {
+
+            ShowMessageInternal(MessageType.Begin, "Start to load eventId & eventMessage...");
+            ErrCode = new Dictionary<string, string>();
+            StreamReader sr = new StreamReader(errcodefile);
+            while (!sr.EndOfStream)
+            {
+
+                string linestr = sr.ReadLine().Trim ();
+                if (!string.IsNullOrEmpty (linestr ) && linestr.Contains (","))
+                {
+
+                    string eventId = linestr.Split(',')[0];
+                    string eventMsg = linestr.Split(',')[1];
+                    if (!ErrCode.Keys.Contains(eventId))
+                        ErrCode.Add(eventId, eventMsg);
+                }
+
+            }
+            sr.Close();
+            ShowMessageInternal(MessageType.Success , "Load eventId & eventMessage sucessful...");
+        }
+
+
+
         #region JsonInfo
 
 
@@ -259,13 +374,13 @@ namespace WeiChatInfoCollection
             public int alertItem { set; get; }
             public int IssueType { set; get; }
             public string syncId { set; get; }
-            public UInt64 STime { set; get; }
-            public UInt64 ETime { set; get; }
-            public UInt64 PTime { set; get; }
-            public UInt64 EndingTime { set; get; }
-            public UInt64 L1Time { set; get; }
-            public UInt64 L2Time { set; get; }
-            public UInt64 L3Time { set; get; }
+            public string STime { set; get; }
+            public string ETime { set; get; }
+            public string PTime { set; get; }
+            public string EndingTime { set; get; }
+            public string L1Time { set; get; }
+            public string L2Time { set; get; }
+            public string L3Time { set; get; }
             public string uId { set; get; }
             public int status { set; get; }
             public string level { set; get; }
@@ -279,8 +394,8 @@ namespace WeiChatInfoCollection
             public string evtvalue6 { set; get; }
             public string evtvalue7 { set; get; }
             public string evtvalue8 { set; get; }
-            public string evtvalue9 { set; get; }
-            public string evtvalue10 { set; get; }
+            public string  evtvalue9 { set; get; }
+            public string  evtvalue10 { set; get; }
             public string evtvalue11 { set; get; }
             public string evtvalue12 { set; get; }
             public string evtvalue13 { set; get; }
