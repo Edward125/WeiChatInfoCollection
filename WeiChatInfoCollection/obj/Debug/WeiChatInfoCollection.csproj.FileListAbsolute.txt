@@ -1,6 +1,5 @@
 E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\WeiChatInfoCollection.exe
 E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\WeiChatInfoCollection.pdb
-E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.csprojResolveAssemblyReference.cache
 E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.frmMain.resources
 E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.Properties.Resources.resources
 E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\obj\Debug\WeiChatInfoCollection.csproj.GenerateResource.Cache
@@ -23,3 +22,8 @@ Y:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\NPOI.dll
 Y:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\NPOI.OOXML.dll
 Y:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\NPOI.OpenXml4Net.dll
 Y:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\NPOI.OpenXmlFormats.dll
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\ICSharpCode.SharpZipLib.dll
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\NPOI.dll
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\NPOI.OOXML.dll
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\NPOI.OpenXml4Net.dll
+E:\EdwardCode\WeiChatInfoCollection\WeiChatInfoCollection\bin\Debug\NPOI.OpenXmlFormats.dll
