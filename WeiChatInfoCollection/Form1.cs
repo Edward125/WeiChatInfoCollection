@@ -118,7 +118,10 @@ namespace WeiChatInfoCollection
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-           
+
+            //DateTime ddt = ConvertIntDatetime("1566088633192");
+            //ShowMessageInternal(MessageType.Begin,ddt.ToString ("yyyy-MM-dd HH:mm:ss"));
+            //return;
 
             if (!CheckValue())
                 return;
@@ -183,11 +186,11 @@ namespace WeiChatInfoCollection
                 //设定要使用的Sheet为第0个Sheet
                 ISheet TempSheet = wb.GetSheetAt(0);
                 int UsedRows = myWebInfoList.Count;
-                for (int i = 1; i < UsedRows; i++)
+                for (int i = 1; i <= UsedRows; i++)
                 {
 
                     DateTime dt = ConvertIntDatetime(myWebInfoList[i - 1].STime);
-                    TempSheet.CreateRow(i).CreateCell(0).SetCellValue(dt.ToString("yyyy-MM-dd"));
+                    TempSheet.CreateRow(i).CreateCell(0).SetCellValue(dt.ToString("yyyy-MM-dd HH:mm:ss"));
                     //第一个Row要用Create的
                     TempSheet.GetRow(i).CreateCell(1).SetCellValue(myWebInfoList[i - 1].System);
                     //第二个Row之后直接用Get的
@@ -205,11 +208,11 @@ namespace WeiChatInfoCollection
                     TempSheet.GetRow(i).CreateCell(9).SetCellValue(myWebInfoList[i - 1].IssueType);
                     TempSheet.GetRow(i).CreateCell(10).SetCellValue(myWebInfoList[i - 1].syncId);
 
-                    string it = myWebInfoList[i - 1].STime.Trim();
+                    string it = myWebInfoList[i - 1].STime;
                     if (!string .IsNullOrEmpty (it)  && it != "null")
                     {
                         DateTime dtt = ConvertIntDatetime (it );
-                        TempSheet.GetRow(i).CreateCell(11).SetCellValue(dtt.ToString ("yyyy-MM-dd HH:mm:ss"));
+                        TempSheet.GetRow(i).CreateCell(11).SetCellValue(dtt.ToString ("yyyy-MM-dd"));
                     }
                     
                     //TempSheet.GetRow(i).CreateCell(11).SetCellValue(myWebInfoList[i - 1].STime);
@@ -401,7 +404,7 @@ namespace WeiChatInfoCollection
             System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
             double ltime = Convert.ToDouble(utc) / 1000;
             startTime = startTime.AddSeconds(ltime);
-            startTime = startTime.AddHours(8);//转化为北京时间(北京时间=UTC时间+8小时 )
+            //startTime = startTime.AddHours(8);//转化为北京时间(北京时间=UTC时间+8小时 )
             return startTime;
         }
 
